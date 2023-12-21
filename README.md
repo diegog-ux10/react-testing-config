@@ -75,8 +75,3 @@ Pattern:  - 0 matches
 ```
 
 🆗 Como podemos ver **Jest** está funcionando correctamente y nos dice que no encontró ninguna prueba, ya que no la hemos creado.
-
-
-
-
-
