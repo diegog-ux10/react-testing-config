@@ -362,6 +362,6 @@ npm test
 
 Nuestra terminal debería mostrarnos un mensaje similar a este:
 
-
+![paso-04-checkpoint](https://github.com/diegog-ux10/react-testing-config/assets/86785486/6a06a400-041a-4fa9-8be6-d8af46445fcd)
 
 🆗 ¡Felicidades! Tu prueba pasa sin ningún error y has completado la configuración.
