@@ -207,7 +207,7 @@ Corre las pruebas con **npm test** y debería aparecer un error como este:
 
 ### 3.3 Crear carpeta de Mocks
 
-Para solucionar este error, crea una carpeta nueva llamada **__mocks__** dentro del directorio **src**. Luego, agrega dentro de esa carpeta un archivo llamado **file-mock.js**.
+Para solucionar este error, crea una carpeta nueva llamada ****mocks**** dentro del directorio **src**. Luego, agrega dentro de esa carpeta un archivo llamado **file-mock.js**.
 
 ![ss-carpeta-mocks](https://github.com/diegog-ux10/react-testing-config/assets/86785486/e51896b6-3dec-439d-a7b9-341eecfa53e8)
 
@@ -264,10 +264,10 @@ Para corregir este error, solo tenemos que agregar una extensión más a nuestra
   }
 }
 ```
+
 Si tienes dudas de lo que modificamos, puedes comparar el antes y después en esta imagen:
 
 ![diff-paso03-css](https://github.com/diegog-ux10/react-testing-config/assets/86785486/9957bbb7-a02e-47be-840a-3de22c58154a)
-
 
 #### ⚠ ¿Por qué solamente debemos agregar **module.exports = {}**?
 
@@ -282,7 +282,8 @@ Cuando Jest renderiza un componente que importa algún archivo que no sea de Jav
 > "\\.(svg|png|jgp)$": "<rootDir>/src/__mocks__/file-mock.js"
 >
 > ```
->☑☑☑☑
+>
+> ☑☑☑☑
 
 ### ✅ Checkpoint
 
@@ -297,3 +298,70 @@ Nuestra terminal debería mostrarnos un mensaje similar a este:
 ![paso-03-checkpoint](https://github.com/diegog-ux10/react-testing-config/assets/86785486/d1034f32-ca38-483a-8600-98e10395c7ae)
 
 🆗 Ahora, nuestras pruebas se ejecutan sin ningún error de sintaxis.
+
+## Paso 04 - Estructurar prueba con el Patrón Triple A
+
+Este patrón se utiliza comúnmente en pruebas y sigue los siguientes pasos:
+
+- Arrange (Preparar): Configura el entorno de prueba, establece el estado inicial y prepara los objetos necesarios.
+
+- Act (Actuar): Realiza la acción o llamada que deseas probar. Este es el paso donde se invoca el comportamiento que estás evaluando.
+
+- Assert (Afirmar): Verifica el resultado esperado. Comprueba si el comportamiento actúa como se espera y si el estado después de la acción es el previsto.
+
+Este enfoque proporciona una estructura clara y ayuda a separar los diferentes aspectos de la lógica de prueba.
+
+Previamente completaste el primer paso en este patrón (arrange) al renderizar el componente App.
+
+```tsx
+import { render } from '@testing-library/react'
+import App from '../App'
+
+test("loads and displays greeting", async () => {
+  
+  // ✅ ARRANGE
+  render(<App />);
+
+});
+```
+Solo nos falta los ultimos dos.
+
+### 4.1 Usar screen de React Testing Library
+
+Para los siguientes dos pasos, utilizaremos un objeto que nos proporciona React Testing Library llamado **screen**.
+
+```tsx
+import {render, screen} from '@testing-library/react'
+import App from '../App'
+
+test("loads and displays greeting", async () => {
+  // ✅ ARRANGE
+  render(<App />);
+
+  // ✅ ACT
+  await screen.findByRole("heading");
+
+  // ✅ ASSERT
+  expect(screen.getAllByText("Vite + React")).not.toBeNull();
+});
+```
+
+> #### ❗ Nota importante ❗
+>
+> Algunos métodos de screen retornan promesas, por lo que es necesario utilizar **await** y convertir nuestra función asíncrona agregando **async**.
+>
+> ☑☑☑☑
+
+### ✅ Checkpoint
+
+Para comprar que toda nuestra configuración esta bien, ejecutemos una vez más:
+
+```
+npm test
+```
+
+Nuestra terminal debería mostrarnos un mensaje similar a este:
+
+
+
+🆗 ¡Felicidades! Tu prueba pasa sin ningún error y has completado la configuración.
