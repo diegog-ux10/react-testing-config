@@ -9,6 +9,7 @@ Para empezar a configurar nuestro entorno de pruebas, necesitamos instalar Jest.
 ```
 npm install --save-dev jest @testing-library/react jest-environment-jsdom
 ```
+
 #### ⚠ ¿Por qué necesitamos instalar estas dependencias?
 
 - Jest: es un marco de pruebas para JavaScript.
@@ -19,12 +20,6 @@ npm install --save-dev jest @testing-library/react jest-environment-jsdom
 > 
 > Utilizamos --save-dev para especificar que las dependencias están destinadas a ser utilizadas en un entorno de desarrollo. Esto significa que cuando la aplicación se despliegue en producción, no se tendrán en cuenta dichas dependencias.
 >
->☑☑☑
-
-#### Así debe verse nuestro archivo package.json luego de la instalación
-
-![paso-01-devdependencies](https://github.com/diegog-ux10/react-testing-config/assets/86785486/08ac2eaf-9714-4f33-8e49-75dd88570310)
-
 
 ### 1.2 Configurar Jest
 
@@ -47,7 +42,7 @@ Por último, vamos a agregar una configuración extra de Jest en nuestro package
 ```json
 {
   "jest": {
-    "testEnvironment": "jsdom" 
+    "testEnvironment": "jsdom"
   }
 }
 ```
@@ -68,7 +63,7 @@ Nuestra terminal debería mostrarnos un mensaje similar a este:
 > react-testing-config@0.0.0 test
 > jest
 
-No tests found, exiting with code 1 
+No tests found, exiting with code 1
 Run with `--passWithNoTests` to exit with code 0
 In C:\Users\dgl_1\Desktop\repo\react-testing-config
   9 files checked.
@@ -84,7 +79,7 @@ Pattern:  - 0 matches
 
 ### 2.1 Crear archivo de pruebas
 
-Para comenzar este paso, vamos a crear una prueba de ejemplo. Crea una carpeta llamada **__tests__** dentro del directorio **src**.
+Para comenzar este paso, vamos a crear una prueba de ejemplo. Crea una carpeta llamada \***\*tests\*\*** dentro del directorio **src**.
 
 Ahora, crea un archivo de ejemplo para una prueba dentro de la carpeta **__tests__**.
 
@@ -173,3 +168,131 @@ Nuestra terminal debería mostrar un mensaje similar a este:
 ![paso-02-checkpoint](https://github.com/diegog-ux10/react-testing-config/assets/86785486/fbb7dc2c-5451-449a-aa4b-ac0ee3a0a642)
 
 🆗 Ahora nuestras pruebas corren sin ningún error
+
+## Paso 03 - Utilizar Mocks
+
+### 3.1 Renderizar componente App
+
+En el archivo de pruebas de ejemplo, cambia lo que estás renderizando por el componente **App**. Debería quedar así:
+
+```tsx
+import { render } from "@testing-library/react";
+import App from "../App";
+
+test("loads and displays greeting", () => {
+  render(<App />);
+});
+```
+
+### 3.2 Correr pruebas y analizar error
+
+Corre las pruebas con **npm test** y debería aparecer un error como este:
+
+```
+     SyntaxError: Unexpected token '<'
+
+      1 | import { useState } from 'react'
+    > 2 | import reactLogo from './assets/react.svg'
+        | ^
+      3 | import viteLogo from '/vite.svg'
+      4 | import './App.css'
+      5 |
+
+      at Runtime.createScriptFromCode (node_modules/jest-runtime/build/index.js:1505:14)
+      at Object.require (src/App.tsx:2:1)
+      at Object.require (src/__test__/ejemplo.test.tsx:2:1)
+```
+
+❌ Este error surge porque **Jest** intenta procesar un archivo **.svg** como si fuera código de JavaScript.
+
+### 3.3 Crear carpeta de Mocks
+
+Para solucionar este error, crea una carpeta nueva llamada **__mocks__** dentro del directorio **src**. Luego, agrega dentro de esa carpeta un archivo llamado **file-mock.js**.
+
+![ss-carpeta-mocks](https://github.com/diegog-ux10/react-testing-config/assets/86785486/e51896b6-3dec-439d-a7b9-341eecfa53e8)
+
+Ahora, dentro del archivo escribe el siguiente código:
+
+```js
+/*file-mock.js*/
+
+module.exports = {};
+```
+
+### 3.4 Actualizar la configuración de Jest para utilizar mocks
+
+Esto no es suficiente, necesitamos decirle a Jest que cuando encuentre una importación con el tipo de extensión **.svg**, utilice nuestro archivo file-mock. Para lograr esto, agrega lo siguiente a tu **package.json**:
+
+```json
+{
+  "jest": {
+    "testEnvironment": "jsdom",
+    "moduleNameMapper": {
+      "\\.(svg)$": "<rootDir>/src/__mocks__/file-mock.js"
+    }
+  }
+}
+```
+
+Si intentamos correr nuestras pruebas con **npm test**, ahora veremos un error como este:
+
+```
+  SyntaxError: Private field '#root' must be declared in an enclosing class
+
+      2 | import reactLogo from './assets/react.svg'
+      3 | import viteLogo from '/vite.svg'
+    > 4 | import './App.css'
+        | ^
+      5 |
+      6 | function App() {
+      7 |   const [count, setCount] = useState(0)
+```
+
+❌ Similar al caso anterior, Jest ahora está intentando leer un archivo **.css** como si fuera de JavaScript.
+
+### 3.5 Agregar extensión .css al mapper de Jest
+
+Para corregir este error, solo tenemos que agregar una extensión más a nuestra configuración previa de Jest:
+
+```json
+{
+  "jest": {
+    "testEnvironment": "jsdom",
+    "moduleNameMapper": {
+      "\\.(svg|css)$": "<rootDir>/src/__mocks__/file-mock.js"
+    }
+  }
+}
+```
+Si tienes dudas de lo que modificamos, puedes comparar el antes y después en esta imagen:
+
+
+
+#### ⚠ ¿Por qué solamente debemos agregar **module.exports = {}**?
+
+Cuando Jest renderiza un componente que importa algún archivo que no sea de JavaScript, redirige la importación al archivo mockeado y no genera un error de sintaxis. Dado que no necesitamos renderizar nada que afecte la visualización, ya que solo estamos simulando un navegador, exportar un módulo vacío es suficiente.
+
+> #### ❗ Nota importante ❗
+>
+> Solo estamos agregando las extensiones .svg y .css en el mapper, ya que son las únicas que se están utilizando en nuestro componente App. Si necesitamos que nuestro mock sea utilizado por Jest con otros tipos de archivos, podemos agregar extensiones separándolas con 👉 **|**
+> Ejemplo:
+>
+> ```
+> "\\.(svg|png|jgp)$": "<rootDir>/src/__mocks__/file-mock.js"
+>
+> ```
+>☑☑☑☑
+
+### ✅ Checkpoint
+
+Para comprobar que hemos configurado correctamente nuestro mock, ejecutemos el siguiente comando:
+
+```
+npm test
+```
+
+Nuestra terminal debería mostrarnos un mensaje similar a este:
+
+![paso-03-checkpoint](https://github.com/diegog-ux10/react-testing-config/assets/86785486/d1034f32-ca38-483a-8600-98e10395c7ae)
+
+🆗 Ahora, nuestras pruebas se ejecutan sin ningún error de sintaxis.
