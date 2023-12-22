@@ -266,6 +266,7 @@ Para corregir este error, solo tenemos que agregar una extensión más a nuestra
 ```
 Si tienes dudas de lo que modificamos, puedes comparar el antes y después en esta imagen:
 
+![diff-paso03-css](https://github.com/diegog-ux10/react-testing-config/assets/86785486/9957bbb7-a02e-47be-840a-3de22c58154a)
 
 
 #### ⚠ ¿Por qué solamente debemos agregar **module.exports = {}**?
