@@ -35,6 +35,9 @@
     "vite": "^5.0.8"
   },
   "jest": {
-    "testEnvironment": "jsdom"
+    "testEnvironment": "jsdom",
+    "moduleNameMapper": {
+      "\\.(svg|css)$": "<rootDir>/src/__mocks__/file-mock.js"
+    }
   }
 }
