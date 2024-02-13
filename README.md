@@ -17,9 +17,8 @@ npm install --save-dev jest @testing-library/react jest-environment-jsdom
 - Jest environment jsdom: jsdom es una implementación pura de JavaScript del DOM y las API del navegador que se ejecuta en Node.
 
 > #### ❗ Nota importante ❗
-> 
-> Utilizamos --save-dev para especificar que las dependencias están destinadas a ser utilizadas en un entorno de desarrollo. Esto significa que cuando la aplicación se despliegue en producción, no se tendrán en cuenta dichas dependencias.
 >
+> Utilizamos --save-dev para especificar que las dependencias están destinadas a ser utilizadas en un entorno de desarrollo. Esto significa que cuando la aplicación se despliegue en producción, no se tendrán en cuenta dichas dependencias.
 
 ### 1.2 Configurar Jest
 
@@ -81,16 +80,16 @@ Pattern:  - 0 matches
 
 Para comenzar este paso, vamos a crear una prueba de ejemplo. Crea una carpeta llamada \***\*tests\*\*** dentro del directorio **src**.
 
-Ahora, crea un archivo de ejemplo para una prueba dentro de la carpeta **__tests__**.
+Ahora, crea un archivo de ejemplo para una prueba dentro de la carpeta ****tests****.
 
 ![ss-carpeta-tests](https://github.com/diegog-ux10/react-testing-config/assets/86785486/5b72b432-51aa-4182-8fde-83ef676727bd)
 
 ```tsx
 /* ejemplo.test.tsx */
 
-import { render } from "@testing-library/react";
+import { render } from '@testing-library/react';
 
-test("loads and displays greeting", () => {
+test('loads and displays greeting', () => {
   render(
     <div>
       <h1>Hola, Soy una prueba</h1>
@@ -140,9 +139,9 @@ Para utilizar Babel, debemos crear un archivo de configuración en la raíz de n
 
 module.exports = {
   presets: [
-    "@babel/preset-env",
-    ["@babel/preset-react", { runtime: "automatic" }],
-    "@babel/preset-typescript",
+    '@babel/preset-env',
+    ['@babel/preset-react', { runtime: 'automatic' }],
+    '@babel/preset-typescript',
   ],
 };
 ```
@@ -176,10 +175,10 @@ Nuestra terminal debería mostrar un mensaje similar a este:
 En el archivo de pruebas de ejemplo, cambia lo que estás renderizando por el componente **App**. Debería quedar así:
 
 ```tsx
-import { render } from "@testing-library/react";
-import App from "../App";
+import { render } from '@testing-library/react';
+import App from '../App';
 
-test("loads and displays greeting", () => {
+test('loads and displays greeting', () => {
   render(<App />);
 });
 ```
@@ -207,7 +206,7 @@ Corre las pruebas con **npm test** y debería aparecer un error como este:
 
 ### 3.3 Crear carpeta de Mocks
 
-Para solucionar este error, crea una carpeta nueva llamada **__mocks__** dentro del directorio **src**. Luego, agrega dentro de esa carpeta un archivo llamado **file-mock.js**.
+Para solucionar este error, crea una carpeta nueva llamada ****mocks**** dentro del directorio **src**. Luego, agrega dentro de esa carpeta un archivo llamado **file-mock.js**.
 
 ![ss-carpeta-mocks](https://github.com/diegog-ux10/react-testing-config/assets/86785486/e51896b6-3dec-439d-a7b9-341eecfa53e8)
 
@@ -264,10 +263,10 @@ Para corregir este error, solo tenemos que agregar una extensión más a nuestra
   }
 }
 ```
+
 Si tienes dudas de lo que modificamos, puedes comparar el antes y después en esta imagen:
 
 ![diff-paso03-css](https://github.com/diegog-ux10/react-testing-config/assets/86785486/9957bbb7-a02e-47be-840a-3de22c58154a)
-
 
 #### ⚠ ¿Por qué solamente debemos agregar **module.exports = {}**?
 
@@ -282,7 +281,8 @@ Cuando Jest renderiza un componente que importa algún archivo que no sea de Jav
 > "\\.(svg|png|jgp)$": "<rootDir>/src/__mocks__/file-mock.js"
 >
 > ```
->☑☑☑☑
+>
+> ☑☑☑☑
 
 ### ✅ Checkpoint
 
@@ -302,7 +302,7 @@ Nuestra terminal debería mostrarnos un mensaje similar a este:
 
 ### 4.1 Crea un nuevo archivo de prueba
 
-En el directorio de **__tests__** crea una nuevo archivo llamado _login.test.tsx_.
+En el directorio de ****tests**** crea una nuevo archivo llamado _login.test.tsx_.
 
 ### 4.2 Encabezado de la Prueba
 
@@ -373,7 +373,7 @@ describe('Proceso de autenticación', () => {
 
 **jest.fn()** es una función proporcionada por Jest que se utiliza para crear mocks de funciones. Un "mock" es una versión simulada de una función existente que se utiliza en pruebas para simular el comportamiento de la función real.
 
-**jest.spyOn()** se utiliza para crear *espías* en funciones y métodos. Es una función que registra información sobre llamadas hechas a ella, como cuántas veces se llamó, con qué argumentos y qué valor devolvió. Puedes reemplazar una función o método existente en tu código con un *spy*. Luego, puedes realizar afirmaciones basadas en cómo se llama la función, con qué argumentos se llama y qué devuelve.
+**jest.spyOn()** se utiliza para crear _espías_ en funciones y métodos. Es una función que registra información sobre llamadas hechas a ella, como cuántas veces se llamó, con qué argumentos y qué valor devolvió. Puedes reemplazar una función o método existente en tu código con un _spy_. Luego, puedes realizar afirmaciones basadas en cómo se llama la función, con qué argumentos se llama y qué devuelve.
 
 En este caso en particular hemos colocado un espía a la función useNavigate de react router, y hemos cambiado su implementación con el mock que creamos.
 
@@ -445,11 +445,11 @@ Como podrás ver, hemos agregado el atributo **data-testid** en 3 elementos del 
 Ahora necesitamos utilizar este atributo en nuestra prueba:
 
 ```tsx
-  const { getByTestId } = render(<Login />);
+const { getByTestId } = render(<Login />);
 
-  const emailInput = getByTestId('login_form_email_input');
-  const passwordInput = getByTestId('login_form_password_input');
-  const submitButton = getByTestId('login_form_submit_button');
+const emailInput = getByTestId('login_form_email_input');
+const passwordInput = getByTestId('login_form_password_input');
+const submitButton = getByTestId('login_form_submit_button');
 ```
 
 **render** además de mostrar el HTML retorna varias funciones útiles. Una de ella es getByTestId que nos permite encontrar y hacer referencia a los elementos que tenga el atributo data-testid.
@@ -459,9 +459,9 @@ Ahora necesitamos utilizar este atributo en nuestra prueba:
 Para verificar que todo esté funcionando bien. Agrega las siguientes líneas de código a tu prueba.
 
 ```tsx
-console.log({'email input': emailInput});
-console.log({'passwordd input': passwordInput});
-console.log({'submit button': submitButton});
+console.log({ 'email input': emailInput });
+console.log({ 'passwordd input': passwordInput });
+console.log({ 'submit button': submitButton });
 ```
 
 Esto nos servirá para poder ver en la consola si estamos haciendo la referencia correctamente. Por último ejecuta el siguiente comando:
@@ -477,3 +477,89 @@ Deberias poder ver algo similar a esto:
 ![paso-04-checkpoint](https://github.com/diegog-ux10/react-testing-config/assets/86785486/adf09818-0617-4844-a814-2d985228d5f0)
 
 🆗 Hemos logrado **preparar** (arrange) nuestra prueba para el siguiente paso.
+
+## Paso 05 - Act
+
+### 5.1 Instalar user event de testing library
+
+Para realizar la interacción con el componente vamos a utilizar una nueva librería. Ejecuta el siguiente comando:
+
+```
+npm install --save-dev @testing-library/user-event
+```
+
+### 5.2 Utilizar userEvent
+
+Ahora vamos a la prueba y utilicemos userEvent. Puedes agregar estas líneas de código a tu prueba:
+
+```tsx
+await userEvent.type(emailInput, 'email@example.com');
+await userEvent.type(passwordInput, '123456');
+await userEvent.click(submitButton);
+```
+
+Aquí es importante resaltar 2 cosas:
+
+- La primera es que estamos usando await, por lo que debemos hacer nuestra función asíncrona.
+
+```tsx
+describe('Proceso de autenticación', () => {
+  // Hemos agregado async al callback
+  it('Debe llamar navigate con /', async () => {
+    // ...resto del código
+    const emailInput = getByTestId('login_form_email_input');
+    const passwordInput = getByTestId('login_form_password_input');
+    const submitButton = getByTestId('login_form_submit_button');
+    // ✅ Act
+    await userEvent.type(emailInput, 'email@example.com');
+    await userEvent.type(passwordInput, '123456');
+    await userEvent.click(submitButton);
+    // resto del código...
+  });
+});
+```
+
+- La segunda es el método que estamos usando de userEvent; para los input's usamos type debido a que necesitamos escribir y para el botón estamos usando click porque solo queremos hacer click luego de ingresar los datos.
+
+### ✅ Checkpoint - Paso 05
+
+Para verificar que lo hayas hecho bien. Ejecuta las pruebas
+
+```
+npm run test login.test.tsx
+```
+
+Deberiamos poder ver en la consola esto:
+
+```js
+console.log
+   <form>
+    <input
+      data-testid="login_form_email_input"
+      id="email"
+      name="email"
+      placeholder="email"
+      required=""
+      type="text"
+      value="email@example.com" // valor ingresado
+    />
+    <input
+      autocomplete="current-password"
+      data-testid="login_form_password_input"
+      id="password"
+      name="password"
+      placeholder="Password"
+      required=""
+      type="password"
+      value="123456" // valor ingresado 
+    />
+    <button
+      data-testid="login_form_submit_button"
+      type="submit"
+    >
+      Login
+    </button>
+  </form>
+```
+
+🆗 Si aparece esto quiere decir que lograste ingresar los datos correctamente en los input's. Ahora podemos terminar nuestra prueba haciendo el **assert**.
