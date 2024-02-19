@@ -59,6 +59,7 @@ export const Login: FC = () => {
             value={formData.email}
             onChange={handleInputChange}
             required
+            data-testid="login_form_email_input" // 4.7 agregado data-testid para referenciar en la prueba
           />
           <input
             type="password"
@@ -69,8 +70,13 @@ export const Login: FC = () => {
             onChange={handleInputChange}
             required
             autoComplete="current-password"
+            data-testid="login_form_password_input"
           />
-          <button type="submit" disabled={loginStatus === 'loading'}>
+          <button
+            type="submit"
+            disabled={loginStatus === 'loading'}
+            data-testid="login_form_submit_button"
+          >
             Login
           </button>
         </form>
