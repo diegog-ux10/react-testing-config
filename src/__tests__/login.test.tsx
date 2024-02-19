@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import { Login } from '../pages';
 import * as router from 'react-router';
 import userEvent from '@testing-library/user-event';
@@ -27,6 +27,13 @@ describe('Proceso de autenticación', () => {
     await userEvent.type(emailInput, 'email@example.com');
     await userEvent.type(passwordInput, '123456');
     await userEvent.click(submitButton);
+
+    // ✅ Assert
+    // 6.1 Utilizar waitFor
+    await waitFor(() => {
+      // 6.2 afimar con expect
+      expect(navigateMock).toHaveBeenCalledWith('/');
+    });
 
     screen.debug(); // 4.6 Con esto podras ver el html del componente en consola
   });
