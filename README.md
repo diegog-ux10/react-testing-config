@@ -297,3 +297,183 @@ Nuestra terminal debería mostrarnos un mensaje similar a este:
 ![paso-03-checkpoint](https://github.com/diegog-ux10/react-testing-config/assets/86785486/d1034f32-ca38-483a-8600-98e10395c7ae)
 
 🆗 Ahora, nuestras pruebas se ejecutan sin ningún error de sintaxis.
+
+## Paso 04 - Arrange
+
+### 4.1 Crea un nuevo archivo de prueba
+
+En el directorio de **__tests__** crea una nuevo archivo llamado _login.test.tsx_.
+
+### 4.2 Encabezado de la Prueba
+
+En el nuevo archivo _login.test.tsx_ escribe el encabezado de la prueba utilizando la función **describe**.
+
+```tsx
+// login.test.tsx
+
+describe('Proceso de autenticación', () => {});
+```
+
+### 4.3 Usar It
+
+Dentro del callback que esta en el segundo argumento de _describe_, podemos empezar a crear todas las pruebas relacionadas con el proceso de autenticación (login). Para ello, utilizaremos _it_. _it_ es una funcion de Jest que nos permite ejecutar pruebas, y separarlas por lo que _deberian_ hacer.
+
+```tsx
+// login.test.tsx
+
+describe('Proceso de autenticación', () => {
+  it('Debe llamar navigate con /', () => {});
+});
+```
+
+### 4.4 Render
+
+Utilizar la función render de React Testing Library, para renderizar el componente que necesitas testear:
+
+```tsx
+// login.test.tsx
+
+import { render } from '@testing-library/react';
+import { Login } from '../pages/login/login';
+import { MemoryRouter } from 'react-router-dom';
+
+describe('Proceso de autenticación', () => {
+  it('Debe llamar navigate con /', () => {
+    // Arrange
+    render(<Login />);
+  });
+});
+```
+
+ℹ️ Debido a que estamos testeando el frontend de la aplicación, es muy común que dentro del arrange siempre necesitemos renderizar algún componente.
+
+### 4.5 Jest Function y Mocks
+
+Como nuestra prueba intenta verificar si navigate es llamado luego de la autenticación, Vamos a hacer un mock de navigate:
+
+```tsx
+// login.test.tsx
+
+import { render } from '@testing-library/react';
+import { Login } from '../pages/login/login';
+import * as router from 'react-router';
+
+const navigateMock = jest.fn();
+const useNavigateMock = () => navigateMock
+const useNavigateSpy = jest.spyOn(router, 'useNavigate')
+useNavigateSpy.mockImplementation(useNavigateMock);
+
+describe('Proceso de autenticación', () => {
+  it('Debe llamar navigate con /', () => {
+    // Arrange
+    render(<Login />);
+  });
+});
+```
+
+**jest.fn()** es una función proporcionada por Jest que se utiliza para crear mocks de funciones. Un "mock" es una versión simulada de una función existente que se utiliza en pruebas para simular el comportamiento de la función real.
+
+**jest.spyOn()** se utiliza para crear *espías* en funciones y métodos. Es una función que registra información sobre llamadas hechas a ella, como cuántas veces se llamó, con qué argumentos y qué valor devolvió. Puedes reemplazar una función o método existente en tu código con un *spy*. Luego, puedes realizar afirmaciones basadas en cómo se llama la función, con qué argumentos se llama y qué devuelve.
+
+En este caso en particular hemos colocado un espía a la función useNavigate de react router, y hemos cambiado su implementación con el mock que creamos.
+
+### 4.6 screen.debug
+
+Agrega **screen.debug()** justo despues de la reenderización. Se utiliza para imprimir en la consola el HTML actual del componente que se está probando. Esto es útil para depurar y comprender mejor el estado y la estructura del componente durante la ejecución de la prueba.
+
+```tsx
+// login.test.tsx
+
+import { render, screen } from '@testing-library/react';
+import { Login } from '../pages/login/login';
+import * as router from 'react-router';
+
+const navigateMock = jest.fn();
+const useNavigateMock = () => navigateMock
+const useNavigateSpy = jest.spyOn(router, 'useNavigate')
+useNavigateSpy.mockImplementation(useNavigateMock);
+
+describe('Proceso de autenticación', () => {
+  it('Debe redirigir al home si ingresas los datos correctos', () => {
+    // Arrange
+     render(<Login />);
+
+    screen.debug(); // Con esto podras ver el html del componente en consola
+  });
+});
+```
+
+### 4.7 Agregar data-testid en el Formulario
+
+Como necesitamos ingresar datos para probar el formulario de login. Debemos hacer referencia a los input's del formulario para luego ingresar la información. Para esto nos va a ayudar los data-testid.
+
+**data-testid** es un atributo personalizado que se puede agregar a elementos HTML en tu código fuente para proporcionar identificadores específicos que se pueden utilizar en pruebas automatizadas. Es una práctica común en pruebas de frontend y es especialmente útil cuando se utilizan bibliotecas de pruebas como Testing Library.
+
+```tsx
+  <input
+      type="text"
+      id="email"
+      name="email"
+      placeholder="email"
+      value={formData.email}
+      onChange={handleInputChange}
+      required
+      data-testid="login_form_email_input"
+    />
+  <input
+    type="password"
+    id="password"
+    name="password"
+    placeholder="Password"
+    value={formData.password}
+    onChange={handleInputChange}
+    required
+    autoComplete="current-password"
+    data-testid="login_form_password_input"
+  />
+  <button
+    type="submit"
+    disabled={loginStatus === 'loading'}
+    data-testid="login_form_submit_button"
+  >
+    Login
+  </button>
+```
+
+Como podrás ver, hemos agregado el atributo **data-testid** en 3 elementos del formulario; los dos input's y el botón de submit.
+
+Ahora necesitamos utilizar este atributo en nuestra prueba:
+
+```tsx
+  const { getByTestId } = render(<Login />);
+
+  const emailInput = getByTestId('login_form_email_input');
+  const passwordInput = getByTestId('login_form_password_input');
+  const submitButton = getByTestId('login_form_submit_button');
+```
+
+**render** además de mostrar el HTML retorna varias funciones útiles. Una de ella es getByTestId que nos permite encontrar y hacer referencia a los elementos que tenga el atributo data-testid.
+
+### ✅ Checkpoint - Paso 04
+
+Para verificar que todo esté funcionando bien. Agrega las siguientes líneas de código a tu prueba.
+
+```tsx
+console.log({'email input': emailInput});
+console.log({'passwordd input': passwordInput});
+console.log({'submit button': submitButton});
+```
+
+Esto nos servirá para poder ver en la consola si estamos haciendo la referencia correctamente. Por último ejecuta el siguiente comando:
+
+```
+npm run test login.test.tsx
+```
+
+Debido a que ahora tenemos más de un archivo de pruebas en nuestro proyecto, hemos agregado 'login.test.tsx' al comando para especificarle a jest que solo debe ejecutar ese archivo.
+
+Deberias poder ver algo similar a esto:
+
+![paso-04-checkpoint](https://github.com/diegog-ux10/react-testing-config/assets/86785486/adf09818-0617-4844-a814-2d985228d5f0)
+
+🆗 Hemos logrado **preparar** (arrange) nuestra prueba para el siguiente paso.
