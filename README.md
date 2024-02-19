@@ -78,9 +78,9 @@ Pattern:  - 0 matches
 
 ### 2.1 Crear archivo de pruebas
 
-Para comenzar este paso, vamos a crear una prueba de ejemplo. Crea una carpeta llamada \***\*tests\*\*** dentro del directorio **src**.
+Para comenzar este paso, vamos a crear una prueba de ejemplo. Crea una carpeta llamada **tests** dentro del directorio **src**.
 
-Ahora, crea un archivo de ejemplo para una prueba dentro de la carpeta ****tests****.
+Ahora, crea un archivo de ejemplo para una prueba dentro de la carpeta **tests**.
 
 ![ss-carpeta-tests](https://github.com/diegog-ux10/react-testing-config/assets/86785486/5b72b432-51aa-4182-8fde-83ef676727bd)
 
@@ -206,7 +206,7 @@ Corre las pruebas con **npm test** y debería aparecer un error como este:
 
 ### 3.3 Crear carpeta de Mocks
 
-Para solucionar este error, crea una carpeta nueva llamada ****mocks**** dentro del directorio **src**. Luego, agrega dentro de esa carpeta un archivo llamado **file-mock.js**.
+Para solucionar este error, crea una carpeta nueva llamada **mocks** dentro del directorio **src**. Luego, agrega dentro de esa carpeta un archivo llamado **file-mock.js**.
 
 ![ss-carpeta-mocks](https://github.com/diegog-ux10/react-testing-config/assets/86785486/e51896b6-3dec-439d-a7b9-341eecfa53e8)
 
@@ -563,3 +563,48 @@ console.log
 ```
 
 🆗 Si aparece esto quiere decir que lograste ingresar los datos correctamente en los input's. Ahora podemos terminar nuestra prueba haciendo el **assert**.
+
+## Paso 06 - Assert
+
+### 6.1 Utilizar waitFor()
+
+Agrega **waitFor()** para hacer las afirmaciones de tu prueba:
+
+```tsx
+import { render, screen, waitFor } from '@testing-library/react';
+
+//...resto del código...
+
+// ✅ Assert
+await waitFor(() => {});
+```
+
+Esta función se utiliza para esperar a que se completen las operaciones asincrónicas en escenarios de prueba. Esto podría incluir esperar a que se resuelvan las promesas, se renderizen los elementos DOM u otras tareas asincrónicas finalicen antes de continuar con las afirmaciones.
+
+### 6.2 afimar con expect()
+
+La función **expect()** se utiliza para realizar afirmaciones o expectativas sobre el comportamiento de tu código durante la ejecución de pruebas. Básicamente, te permite verificar si ciertas condiciones son verdaderas o falsas.
+
+```tsx
+await waitFor(() => {
+  expect(navigateMock).toHaveBeenCalledWith('/');
+});
+```
+
+✅ Esto nos ayudará a afirmar que la aplicación a llamado al mock de navigate para redirigirnos a la página de incio.
+
+```
+
+### ✅ Checkpoint - Paso 06
+
+Ejecuta el siguiente comando:
+
+```
+npm run test login
+```
+
+Deberías poder ver que las pruebas pasaron:
+
+![checkpoint6](https://github.com/diegog-ux10/react-testing-config/assets/86785486/40d410aa-216e-4b26-b047-b274d98c8934)
+
+🆗 Felicidades ahora sabes como configurar tus proyectos para hacer pruebas y como diseñarlas utilizando el patrón triple AAA.
