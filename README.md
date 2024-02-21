@@ -335,7 +335,6 @@ Utilizar la función render de React Testing Library, para renderizar el compone
 
 import { render } from '@testing-library/react';
 import { Login } from '../pages/login/login';
-import { MemoryRouter } from 'react-router-dom';
 
 describe('Proceso de autenticación', () => {
   it('Debe llamar navigate con /', () => {
@@ -356,12 +355,8 @@ Como nuestra prueba intenta verificar si navigate es llamado luego de la autenti
 
 import { render } from '@testing-library/react';
 import { Login } from '../pages/login/login';
-import * as router from 'react-router';
 
-const navigateMock = jest.fn();
-const useNavigateMock = () => navigateMock
-const useNavigateSpy = jest.spyOn(router, 'useNavigate')
-useNavigateSpy.mockImplementation(useNavigateMock);
+const navigateMock = jest.fn(); // Mock de Navigate
 
 describe('Proceso de autenticación', () => {
   it('Debe llamar navigate con /', () => {
@@ -370,12 +365,52 @@ describe('Proceso de autenticación', () => {
   });
 });
 ```
-
 **jest.fn()** es una función proporcionada por Jest que se utiliza para crear mocks de funciones. Un "mock" es una versión simulada de una función existente que se utiliza en pruebas para simular el comportamiento de la función real.
 
-**jest.spyOn()** se utiliza para crear *espías* en funciones y métodos. Es una función que registra información sobre llamadas hechas a ella, como cuántas veces se llamó, con qué argumentos y qué valor devolvió. Puedes reemplazar una función o método existente en tu código con un *spy*. Luego, puedes realizar afirmaciones basadas en cómo se llama la función, con qué argumentos se llama y qué devuelve.
+Ahora, navigate realmente no es importado directamente de una librería. De hecho, es una función que es retornada por el hook useNavigate. Necesitamos mockear useNavigate para que retorne navigateMock.
 
-En este caso en particular hemos colocado un espía a la función useNavigate de react router, y hemos cambiado su implementación con el mock que creamos.
+```tsx
+// login.test.tsx
+
+import { render } from '@testing-library/react';
+import { Login } from '../pages/login/login';
+
+const navigateMock = jest.fn();
+const useNavigateMock = () => navigateMock; // Mock de useNavigate
+
+describe('Proceso de autenticación', () => {
+  it('Debe llamar navigate con /', () => {
+    // Arrange
+    render(<Login />);
+  });
+});
+```
+Listo, ya tenemos los mocks. Ahora necesitamos reemplazarlos por los reales. Lo haremos creando un mock de un módulo completo, en este caso, de React Router.
+
+```tsx
+// login.test.tsx
+
+import { render } from '@testing-library/react';
+import { Login } from '../pages/login/login';
+
+const navigateMock = jest.fn();
+const useNavigateMock = () => navigateMock;
+jest.mock('react-router', () => {
+  return {
+    useNavigate: useNavigateMock
+  }
+})
+
+describe('Proceso de autenticación', () => {
+  it('Debe llamar navigate con /', () => {
+    // Arrange
+    render(<Login />);
+  });
+});
+```
+**jest.mock()** Es una función de Jest que simula de todo el módulo 'react-router'. Devuelve un objeto donde useNavigate se reemplaza con useNavigateMock. Esto significa que cada vez que useNavigate se utiliza dentro de la prueba, en realidad utilizará la función useNavigateMock, que a su vez devuelve navigateMock.
+
+Al configurar estos mocks, puedes controlar el comportamiento del hook useNavigate dentro de tus pruebas, lo que te permite simular acciones de navegación sin realmente realizar la navegación dentro de tus pruebas. Esto es útil para probar componentes que utilizan la funcionalidad de navegación de React Router, como es el caso de nuestro componente Login.
 
 ### 4.6 screen.debug
 
@@ -386,12 +421,14 @@ Agrega **screen.debug()** justo despues de la reenderización. Se utiliza para i
 
 import { render, screen } from '@testing-library/react';
 import { Login } from '../pages/login/login';
-import * as router from 'react-router';
 
 const navigateMock = jest.fn();
-const useNavigateMock = () => navigateMock
-const useNavigateSpy = jest.spyOn(router, 'useNavigate')
-useNavigateSpy.mockImplementation(useNavigateMock);
+const useNavigateMock = () => navigateMock;
+jest.mock('react-router', () => {
+  return {
+    useNavigate: useNavigateMock
+  }
+})
 
 describe('Proceso de autenticación', () => {
   it('Debe redirigir al home si ingresas los datos correctos', () => {
