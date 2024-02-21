@@ -1,12 +1,14 @@
 import { render, screen } from '@testing-library/react';
 import { Login } from '../pages';
-import * as router from 'react-router';
 
 // 4.5 Jest Function
 const navigateMock = jest.fn();
-const useNavigateMock = () => navigateMock
-const useNavigateSpy = jest.spyOn(router, 'useNavigate')
-useNavigateSpy.mockImplementation(useNavigateMock);
+const useNavigateMock = () => navigateMock;
+jest.mock('react-router', () => {
+  return {
+    useNavigate: useNavigateMock,
+  };
+});
 
 // 4.2 Encabezado de la Prueba 👇
 describe('Proceso de autenticación', () => {
