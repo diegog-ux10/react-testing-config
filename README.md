@@ -311,18 +311,18 @@ En el nuevo archivo _login.test.tsx_ escribe el encabezado de la prueba utilizan
 ```tsx
 // login.test.tsx
 
-describe('Proceso de autenticación', () => {});
+describe('Pruebas en Login', () => {});
 ```
 
 ### 4.3 Usar It
 
-Dentro del callback que esta en el segundo argumento de _describe_, podemos empezar a crear todas las pruebas relacionadas con el proceso de autenticación (login). Para ello, utilizaremos _it_. _it_ es una funcion de Jest que nos permite ejecutar pruebas, y separarlas por lo que _deberian_ hacer.
+Dentro del callback que esta en el segundo argumento de _describe_, podemos empezar a crear todas las pruebas relacionadas con el Login (login). Para ello, utilizaremos _it_. _it_ es una funcion de Jest que nos permite ejecutar pruebas, y separarlas por lo que _deberian_ hacer.
 
 ```tsx
 // login.test.tsx
 
-describe('Proceso de autenticación', () => {
-  it('Debe llamar navigate con /', () => {});
+describe('Pruebas en Login', () => {
+  it('Debe llamar navigate con / si los datos son correctos', () => {});
 });
 ```
 
@@ -336,8 +336,8 @@ Utilizar la función render de React Testing Library, para renderizar el compone
 import { render } from '@testing-library/react';
 import { Login } from '../pages/login/login';
 
-describe('Proceso de autenticación', () => {
-  it('Debe llamar navigate con /', () => {
+describe('Pruebas en Login', () => {
+  it('Debe llamar navigate con / si los datos son correctos', () => {
     // Arrange
     render(<Login />);
   });
@@ -358,8 +358,8 @@ import { Login } from '../pages/login/login';
 
 const navigateMock = jest.fn(); // Mock de Navigate
 
-describe('Proceso de autenticación', () => {
-  it('Debe llamar navigate con /', () => {
+describe('Pruebas en Login', () => {
+  it('Debe llamar navigate con / si los datos son correctos', () => {
     // Arrange
     render(<Login />);
   });
@@ -378,8 +378,8 @@ import { Login } from '../pages/login/login';
 const navigateMock = jest.fn();
 const useNavigateMock = () => navigateMock; // Mock de useNavigate
 
-describe('Proceso de autenticación', () => {
-  it('Debe llamar navigate con /', () => {
+describe('Pruebas en Login', () => {
+  it('Debe llamar navigate con / si los datos son correctos', () => {
     // Arrange
     render(<Login />);
   });
@@ -401,8 +401,8 @@ jest.mock('react-router', () => {
   }
 })
 
-describe('Proceso de autenticación', () => {
-  it('Debe llamar navigate con /', () => {
+describe('Pruebas en Login', () => {
+  it('Debe llamar navigate con / si los datos son correctos', () => {
     // Arrange
     render(<Login />);
   });
@@ -411,6 +411,7 @@ describe('Proceso de autenticación', () => {
 **jest.mock()** Es una función de Jest que simula de todo el módulo 'react-router'. Devuelve un objeto donde useNavigate se reemplaza con useNavigateMock. Esto significa que cada vez que useNavigate se utiliza dentro de la prueba, en realidad utilizará la función useNavigateMock, que a su vez devuelve navigateMock.
 
 Al configurar estos mocks, puedes controlar el comportamiento del hook useNavigate dentro de tus pruebas, lo que te permite simular acciones de navegación sin realmente realizar la navegación dentro de tus pruebas. Esto es útil para probar componentes que utilizan la funcionalidad de navegación de React Router, como es el caso de nuestro componente Login.
+
 
 ### 4.6 screen.debug
 
@@ -430,8 +431,8 @@ jest.mock('react-router', () => {
   }
 })
 
-describe('Proceso de autenticación', () => {
-  it('Debe redirigir al home si ingresas los datos correctos', () => {
+describe('Pruebas en Login', () => {
+  it('Debe llamar navigate con / si los datos son correctos', () => {
     // Arrange
      render(<Login />);
 
@@ -514,3 +515,5 @@ Deberias poder ver algo similar a esto:
 ![paso-04-checkpoint](https://github.com/diegog-ux10/react-testing-config/assets/86785486/adf09818-0617-4844-a814-2d985228d5f0)
 
 🆗 Hemos logrado **preparar** (arrange) nuestra prueba para el siguiente paso.
+
+### 💪 Stretch challenge - Paso 04
