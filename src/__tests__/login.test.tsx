@@ -10,6 +10,22 @@ jest.mock('react-router', () => {
   };
 });
 
+// Mock del modulo del servicio de autenticación
+jest.mock('../services/auth-service.ts', () => {
+  return {
+    ...jest.requireActual('../services/auth-service.ts'),
+    loginService: () =>
+      Promise.resolve({
+        accessToken: 'acb',
+        user: {
+          email: 'email@example.com',
+          role: 'admin',
+          id: 1,
+        },
+      }),
+  };
+});
+
 // 4.2 Encabezado de la Prueba 👇
 describe('Proceso de autenticación', () => {
   // 4.3 Usar It para separar las diferentes pruebas
