@@ -631,8 +631,6 @@ await waitFor(() => {
 
 ✅ Esto nos ayudará a afirmar que la aplicación a llamado al mock de navigate para redirigirnos a la página de incio.
 
-```
-
 ### ✅ Checkpoint - Paso 06
 
 Ejecuta el siguiente comando:
